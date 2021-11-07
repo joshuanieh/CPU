@@ -34,9 +34,9 @@ begin
     'MUL: data_o = data1_i * data2_i;
     'ADDI: data_o = data1_i + data2_i;
     'SRAI: 
-      reg [31:0] tmp;
-      tmp = data1_i >> data2_i;
-      data_o = data1_i[31] ? {data2_i{1'b1}, tmp[31-data2_i:0]} : tmp;
+      \\parameter d;
+      \\d = data2_i[4:0];
+      data_o = data1_i >>> data2_i[4:0];
 end
 
 endmodule
