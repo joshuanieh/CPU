@@ -10,22 +10,21 @@ input               clk_i;
 input               rst_i;
 input               start_i;
 
-/*
+
 Control Control(
     .Op_i       (),
     .ALUOp_o    (),
     .ALUSrc_o   (),
     .RegWrite_o ()
 );
-*/
 
-/*
+
 Adder Add_PC(
     .data1_in   (),
     .data2_in   (),
     .data_o     ()
 );
-*/
+
 
 PC PC(
     .clk_i      (),
@@ -51,23 +50,23 @@ Registers Registers(
     .RS2data_o   () 
 );
 
-/*
+
 MUX32 MUX_ALUSrc(
     .data1_i    (),
     .data2_i    (),
     .select_i   (),
     .data_o     ()
 );
-*/
 
-/*
+
+
 Sign_Extend Sign_Extend(
     .data_i     (),
     .data_o     ()
 );
-*/
+
   
-/*
+
 ALU ALU(
     .data1_i    (),
     .data2_i    (),
@@ -75,7 +74,7 @@ ALU ALU(
     .data_o     (),
     .Zero_o     ()
 );
-*/
+
 
 /*
 ALU_Control ALU_Control(
