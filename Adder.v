@@ -5,9 +5,9 @@ module Adder(
 );
 
 // Ports
-input   [32:0]      data1_in;
+input   [31:0]      data1_in;
 input               data2_in;
-output  [32:0]      data_o;
+output  [31:0]      data_o;
 
 assign data_o = data1_in + data2_in;
 
