@@ -76,13 +76,13 @@ ALU ALU(
 );
 
 
-/*
+
 ALU_Control ALU_Control(
     .funct_i    (),
     .ALUOp_i    (),
     .ALUCtrl_o  ()
 );
-*/
+
 
 endmodule
 
