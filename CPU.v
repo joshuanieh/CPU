@@ -20,7 +20,7 @@ wire [1:0]  ALUOp;
 wire ALUSrc, RegWrite;
 wire  [31:0] pc_i, RS1data, RS2data, ST_o, MUX_o;
 wire [2:0] ALUCrtl;
-
+wire Zero;
 wire  [31:0] RDdata, pc_o;
 
 //Assigning
@@ -93,7 +93,7 @@ ALU ALU(
     .data2_i    (MUX_o),
     .ALUCtrl_i  (ALUCrtl),
     .data_o     (RDdata),
-    .Zero_o     (0)
+    .Zero_o     (Zero)
 );
 
 

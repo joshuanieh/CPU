@@ -7,25 +7,10 @@ module ALU_Control(
 // Ports
 input   [1:0]       ALUOp_i;
 input   [9:0]       funct_i;
-output  [2:0]       ALUCrtl_o;
+output  [2:0]       ALUCtrl_o;
 
-if(ALUOp_i === 2'b01)
-  if(funct_i[2:0] === 3'b000)
-    ALUCrtl_o = 3'b110;
-  else
-    ALUCrtl_o = 3'b111;
-else
-  if(funct_i[2:0] === 3'b111)
-    ALUCrtl_o = 3'b000;
-  else if(funct_i[2:0] === 3'b100)
-    ALUCrtl_o = 3'b001;
-  else if(funct_i[2:0] === 3'b001)
-    ALUCrtl_o = 3'b010;
-  else
-    if(funct_i[8] === 1'b1)
-      ALUCrtl_o = 3'b100;
-    else if(funct_i[3] === 1'b1)
-      ALUCrtl_o = 3'b101;
-    else
-      ALUCrtl_o = 3'b011;
+assign ALUCtrl_o[2] = funct_i[8] || funct_i[3] || !ALUOp_i[0];
+assign ALUCtrl_o[1] = !ALUOp_i[0] || (!funct_i[8] && !funct_i[3] && !funct_i[2]);
+assign ALUCtrl_o[0] = (funct_i[8] && funct_i[0]) || (!funct_i[8] && !funct_i[0] && ALUOp_i[0]);
+
 endmodule
