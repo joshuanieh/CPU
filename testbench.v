@@ -42,8 +42,8 @@ initial begin
     end
     // [RegisterInitialization] DO NOT REMOVE THIS FLAG !!!
 
-    // TODO: initialize your pipeline registers
-
+    // Initialize pipeline registers
+    CPU
     
     // Load instructions into instruction memory
     // Make sure you change back to "instruction.txt" before submission

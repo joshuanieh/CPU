@@ -2,15 +2,13 @@ module ALU(
     data1_i,
     data2_i,
     ALUCtrl_i,
-    data_o,
-    Zero_o
+    data_o
 );
 
 // Ports
 input signed  [31:0]      data1_i, data2_i;
 input         [2:0]       ALUCtrl_i;
 output reg    [31:0]      data_o;
-output                    Zero_o;
 
 `define AND  3'b000
 `define XOR  3'b001
