@@ -12,16 +12,15 @@ input       start_i;
 
 //Wire
 //Control signals
-wire        ALUSrc_1, ALUSrc_2, RegWrite_2, RegWrite_3, RegWrite_4, RegWrite_5, MemtoReg_2, MemtoReg_3, MemRead_2, MemRead_3, MemWrite_2, MemWrite_3, Branch;
+wire        ALUSrc_1, ALUSrc_2, RegWrite_2, RegWrite_3, RegWrite_4, RegWrite_5, MemtoReg_2, MemtoReg_3, MemtoReg_4, MemRead_2, MemRead_3, MemRead_4, MemWrite_2, MemWrite_3, MemWrite_4, Branch;
 wire [1:0]  ALUOp_2, ALUOp_3;
 //Module I/O
 wire        NoOp, Zero;
 wire [2:0]  ALUCrtl_3;
-wire [4:0]  RS1addr_2, RS1addr_3, RS2addr_2, RS2addr_3, RDaddr_2, RDaddr_3;
+wire [4:0]  RS1addr_2, RS1addr_3, RS2addr_2, RS2addr_3, RDaddr_2, RDaddr_3, RDaddr_4, RDaddr_5;
 wire [6:0]  Op;
 wire [9:0]  funct_2, funct_3;
-wire [11:0] SE_21, SE_22, SE_3;
-wire [31:0] ALUResult_3, instr_1, instr_2, RS1data_2, RS1data_31, RS1data_32, RS2data_2, RS2data_31, RS2data_32, SE_21, SE_22, SE_3, MUX_3, RDdata_5, pc_0, pc_1, pc_2;
+wire [31:0] SE_21, SE_22, SE_3, ALUResult_3, ALUResult_4, ALUResult_5, instr_1, instr_2, RS1data_2, RS1data_31, RS1data_32, RS2data_2, RS2data_31, RS2data_32, RS2data_4, SE_21, SE_22, SE_3, MUX_3, RDdata_5, pc_0, pc_1, pc_2, MemData_4, MemData_5;
 
 
 //Assigning
@@ -29,7 +28,7 @@ assign Op        = instr_2[6:0];
 assign RS1addr_2 = instr_2[19:15];
 assign RS2addr_2 = instr_2[24:20];
 assign RDaddr_2  = instr_2[11:7];
-assign SE_21      = instr_2[31:20];
+assign SE_21     = instr_2;
 assign funct_2   = {instr_2[31:25], instr_2[14:12]};
 
 IFID IFID(
@@ -73,36 +72,37 @@ IDEX IDEX(
 );
 
 EXMEM EXMEM(
-    clk_i,
-    RegWrite_i,
-    MemtoReg_i,
-    MemRead_i,
-    MemWrite_i,
-    ALUResult_i,
-    RS2data_i,
-    RDaddr_i,
-    RegWrite_o,
-    MemtoReg_o,
-    MemRead_o,
-    MemWrite_o,
-    ALUResult_o,
-    RS2data_o,
-    RDaddr_o
+    clk_i       (clk_i),
+    RegWrite_i  (RegWrite_3),
+    MemtoReg_i  (MemtoReg_3m),
+    MemRead_i   (MemRead_3),
+    MemWrite_i  (MemWrite_3),
+    ALUResult_i (ALUResult_3),
+    RS2data_i   (RS2data_32),
+    RDaddr_i    (RDaddr_3),
+    RegWrite_o  (RegWrite_4),
+    MemtoReg_o  (MemtoReg_4),
+    MemRead_o   (MemRead_4),
+    MemWrite_o  (MemWrite_4),
+    ALUResult_o (ALUResult_4),
+    RS2data_o   (RS2data_4),
+    RDaddr_o    (RDaddr_4)
 );
 
 MEMWB MEMWB(
-    clk_i,
-    RegWrite_i,
-    MemtoReg_i,
-    ALUResult_i,
-    MemData_i,
-    RDaddr_i,
-    RegWrite_o,
-    MemtoReg_o,
-    ALUResult_o,
-    MemData_o,
-    RDaddr_o
+    clk_i       (clk_i),
+    RegWrite_i  (RegWrite_4),
+    MemtoReg_i  (MemtoReg_4),
+    ALUResult_i (ALUResult_4),
+    MemData_i   (MemData_4),
+    RDaddr_i    (RDaddr_4),
+    RegWrite_o  (RegWrite_5),
+    MemtoReg_o  (MemtoReg_5),
+    ALUResult_o (ALUResult_5),
+    MemData_o   (MemData_5),
+    RDaddr_o    (RDaddr_5)
 );
+
 Control Control(
     .Op_i       (Op),
     .NoOp_i     (NoOp),
@@ -138,13 +138,13 @@ Instruction_Memory Instruction_Memory(
 
 Registers Registers(
     .clk_i      (clk_i),
-    .RS1addr_i   (RS1addr_2),
-    .RS2addr_i   (RS2addr_2),
+    .RS1addr_i  (RS1addr_2),
+    .RS2addr_i  (RS2addr_2),
     .RDaddr_i   (RDaddr_2), 
     .RDdata_i   (RDdata_5),
     .RegWrite_i (RegWrite_5), 
-    .RS1data_o   (RS1data_2), 
-    .RS2data_o   (RS2data_2) 
+    .RS1data_o  (RS1data_2), 
+    .RS2data_o  (RS2data_2) 
 );
 
 

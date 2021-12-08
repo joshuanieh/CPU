@@ -61,11 +61,11 @@ input      [1:0]  ALUOp_i;
 input      [31:0] RS1data_i, RS2data_i, SE_i;
 input      [9:0]  funct_i;
 input      [4:0]  RS1addr_i, RS2addr_i, RDaddr_i;
-output     [1:0]  ALUOp_i;
-output            ALUSrc_i, RegWrite_i, MemtoReg_i, MemRead_i, MemWrite_i;
-output     [31:0] RS1data_i, RS2data_i, SE_i;
-output     [9:0]  funct_i;
-output     [4:0]  RS1addr_i, RS2addr_i, RDaddr_i;
+output reg [1:0]  ALUOp_i;
+output reg        ALUSrc_i, RegWrite_i, MemtoReg_i, MemRead_i, MemWrite_i;
+output reg [31:0] RS1data_i, RS2data_i, SE_i;
+output reg [9:0]  funct_i;
+output reg [4:0]  RS1addr_i, RS2addr_i, RDaddr_i;
 
 always @(posedge clk) begin
 	RegWrite_o <= RegWrite_i;
@@ -104,9 +104,9 @@ module EXMEM(
 input             clk_i, RegWrite_i, MemtoReg_i, MemRead_i, MemWrite_i;
 input      [31:0] ALUResult_i, RS2data_i;
 input      [4:0]  RDaddr_i;
-output            RegWrite_o, MemtoReg_o, MemRead_o, MemWrite_o;
-output     [31:0] ALUResult_o, RS2data_o;
-output     [4:0]  RDaddr_o;
+output reg        RegWrite_o, MemtoReg_o, MemRead_o, MemWrite_o;
+output reg [31:0] ALUResult_o, RS2data_o;
+output reg [4:0]  RDaddr_o;
 
 always @(posedge clk) begin
 	RegWrite_o  <= RegWrite_i;
@@ -135,9 +135,9 @@ module MEMWB(
 input             clk_i, RegWrite_i, MemtoReg_i;
 input      [31:0] ALUResult_i, MemData_i;
 input      [4:0]  RDaddr_i;
-output            RegWrite_o, MemtoReg_o;
-output     [31:0] ALUResult_o, MemData_o;
-output     [4:0]  RDaddr_o;
+output reg        RegWrite_o, MemtoReg_o;
+output reg [31:0] ALUResult_o, MemData_o;
+output reg [4:0]  RDaddr_o;
 
 always @(posedge clk) begin
 	RegWrite_o  <= RegWrite_i;
