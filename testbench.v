@@ -49,7 +49,7 @@ initial begin
     CPU.IDEX.MemtoReg_o   = 1'b0;
     CPU.IDEX.MemRead_o    = 1'b0;
     CPU.IDEX.MemWrite_o   = 1'b0;
-    CPU.IDEX.ALUOp_o      = 3'b0;
+    CPU.IDEX.ALUOp_o      = 2'b0;
     CPU.IDEX.ALUSrc_o     = 1'b0;
     CPU.IDEX.RS1data_o    = 32'b0;
     CPU.IDEX.RS2data_o    = 32'b0;
@@ -70,7 +70,22 @@ initial begin
     CPU.MEMWB.ALUResult_o = 32'b0;
     CPU.MEMWB.MemData_o   = 32'b0;
     CPU.MEMWB.RDaddr_o    = 5'b0;
-    
+    CPU.counter = 32'b0;
+
+    CPU.Data_Memory.memory[1] = 6;
+    CPU.Data_Memory.memory[2] = 10;
+    CPU.Data_Memory.memory[3] = 18;
+    CPU.Data_Memory.memory[4] = 29;
+    CPU.Registers.register[24] = -24;
+    CPU.Registers.register[25] = -25;
+    CPU.Registers.register[26] = -26;
+    CPU.Registers.register[27] = -27;
+    CPU.Registers.register[28] = 56;
+    CPU.Registers.register[29] = 58;
+    CPU.Registers.register[30] = 60;
+    CPU.Registers.register[31] = 62;
+
+
     // Load instructions into instruction memory
     // Make sure you change back to "instruction.txt" before submission
     $readmemb("instruction.txt", CPU.Instruction_Memory.memory);
@@ -95,7 +110,7 @@ always@(posedge Clk) begin
         $finish;
 
     // put in your own signal to count stall and flush
-    if(CPU.Hazard_Detection.Stall_o == 1 && CPU.Control.Branch_o == 0)stall = stall + 1;
+    if(CPU.Hazard_Detection_Unit.Stall_o == 1 && CPU.Control.Branch_o == 0)stall = stall + 1;
     if(CPU.Flush == 1)flush = flush + 1;  
 
     // print PC
