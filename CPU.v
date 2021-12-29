@@ -53,7 +53,7 @@ end
 IFID IFID(
     .clk_i       (clk_i),
     .instr_i     (instr_1),
-    .Stall_i     (Stall),
+    .Stall_i     (Stall | Miss_stall),
     .Flush_i     (Flush),
     .pc_i        (pc_1),
     .instr_o     (instr_2),
@@ -237,13 +237,50 @@ ALU_Control ALU_Control(
     .ALUCtrl_o   (ALUCrtl_3)
 );
 
+// Data_Memory Data_Memory(
+//     .clk_i       (clk_i),
+//     .addr_i      (ALUResult_4),
+//     .MemRead_i   (MemRead_4),
+//     .MemWrite_i  (MemWrite_4),
+//     .data_i      (RS2data_4),
+//     .data_o      (MemData_4)
+// );
+
+wire         Miss_stall, enable, write;
+wire [255:0] MemData_block, Mem_writeback;
+wire [31:0]  Mem_addr;
+
 Data_Memory Data_Memory(
-    .clk_i       (clk_i),
-    .addr_i      (ALUResult_4),
-    .MemRead_i   (MemRead_4),
-    .MemWrite_i  (MemWrite_4),
-    .data_i      (RS2data_4),
-    .data_o      (MemData_4)
+    .clk_i          (clk_i),
+    .rst_i          (rst_i),
+    .addr_i         (Mem_addr),
+    .data_i         (Mem_writeback),
+    .enable_i       (enable),
+    .write_i        (write),
+    .ack_o          (ack),
+    .data_o         (MemData_block)
+);
+
+dcache_controller dcache_controller(
+    // System clock, reset and stall
+    .clk_i          (clk_i), 
+    .rst_i          (rst_i),
+    
+    // to Data Memory interface        
+    .mem_data_i     (MemData_block), 
+    .mem_ack_i      (ack),     
+    .mem_data_o     (Mem_writeback), 
+    .mem_addr_o     (Mem_addr),     
+    .mem_enable_o   (enable_i), 
+    .mem_write_o    (write), 
+    
+    // to CPU interface    
+    .cpu_data_i     (RS2data_4), 
+    .cpu_addr_i     (ALUResult_4),     
+    .cpu_MemRead_i  (MemRead_4), 
+    .cpu_MemWrite_i (MemWrite_4), 
+    .cpu_data_o     (MemData_4), 
+    .cpu_stall_o    (Miss_stall)
 );
 
 Forwarding_Unit Forwarding_Unit(
