@@ -64,8 +64,8 @@ end
 
 // Read Data      
 // TODO: tag_o=? data_o=? hit_o=?
-assign tag_o = tag[addr_i][0][22:0] === tag_i[22:0] ? tag[addr_i][0][22:0] : tag[addr_i][1][22:0];
 assign hit_o = (tag[addr_i][0][22:0] === tag_i[22:0]) | (tag[addr_i][1][22:0] === tag_i[22:0]);
-assign data_o = tag[addr_i][0][22:0] === tag_i[22:0] ? data[addr_i][0] : data[addr_i][1];
+assign tag_o = hit_o ? ((tag[addr_i][0][22:0] === tag_i[22:0]) ? tag[addr_i][0] : tag[addr_i][1]) : (tag[addr_i][0][24] ? tag[addr_i][1] : tag[addr_i][0]);
+assign data_o = hit_o ? ((tag[addr_i][0][22:0] === tag_i[22:0]) ? data[addr_i][0] : data[addr_i][1]) : (tag[addr_i][0][24] ? data[addr_i][1] : data[addr_i][0]);
 
 endmodule

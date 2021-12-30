@@ -24,14 +24,7 @@ always #(`CYCLE_TIME/2) Clk = ~Clk;
 CPU CPU(
     .clk_i  (Clk),
     .rst_i  (Reset),
-    .start_i(Start),
-    
-    .mem_data_i(mem_cpu_data), 
-    .mem_ack_i(mem_cpu_ack),     
-    .mem_data_o(cpu_mem_data), 
-    .mem_addr_o(cpu_mem_addr),     
-    .mem_enable_o(cpu_mem_enable), 
-    .mem_write_o(cpu_mem_write)
+    .start_i(Start)
 );
 
 Data_Memory Data_Memory

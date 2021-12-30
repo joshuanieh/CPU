@@ -2,13 +2,22 @@ module CPU
 (
     clk_i, 
     rst_i,
-    start_i
+    start_i,
+    mem_data_i, 
+    mem_ack_i,     
+    mem_data_o, 
+    mem_addr_o,     
+    mem_enable_o, 
+    mem_write_o
 );
 
 // Ports
-input       clk_i;
-input       rst_i;
-input       start_i;
+input          clk_i, rst_i, start_i, mem_ack_i;
+input [255:0]  mem_data_i;
+output         mem_enable_o, mem_write_o;
+output [255:0] mem_data_o;
+output [31:0]  mem_addr_o;
+
 
 //Wire
 //Control signals
@@ -246,33 +255,18 @@ ALU_Control ALU_Control(
 //     .data_o      (MemData_4)
 // );
 
-wire         Miss_stall, enable, write;
-wire [255:0] MemData_block, Mem_writeback;
-wire [31:0]  Mem_addr;
-
-Data_Memory Data_Memory(
-    .clk_i          (clk_i),
-    .rst_i          (rst_i),
-    .addr_i         (Mem_addr),
-    .data_i         (Mem_writeback),
-    .enable_i       (enable),
-    .write_i        (write),
-    .ack_o          (ack),
-    .data_o         (MemData_block)
-);
-
-dcache_controller dcache_controller(
+dcache_controller dcache(
     // System clock, reset and stall
     .clk_i          (clk_i), 
     .rst_i          (rst_i),
     
     // to Data Memory interface        
-    .mem_data_i     (MemData_block), 
-    .mem_ack_i      (ack),     
-    .mem_data_o     (Mem_writeback), 
-    .mem_addr_o     (Mem_addr),     
-    .mem_enable_o   (enable_i), 
-    .mem_write_o    (write), 
+    .mem_data_i     (mem_data_i), 
+    .mem_ack_i      (mem_ack_i),     
+    .mem_data_o     (mem_data_o), 
+    .mem_addr_o     (mem_addr_o),     
+    .mem_enable_o   (mem_enable_o), 
+    .mem_write_o    (mem_write_o), 
     
     // to CPU interface    
     .cpu_data_i     (RS2data_4), 
