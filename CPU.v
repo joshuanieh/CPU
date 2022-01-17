@@ -71,6 +71,7 @@ IFID IFID(
 
 IDEX IDEX(
     .clk_i       (clk_i),
+    .Miss_stall_i(Miss_stall),
     .ALUOp_i     (ALUOp_2),
     .ALUSrc_i    (ALUSrc_2),
     .RegWrite_i  (RegWrite_2),
@@ -101,6 +102,7 @@ IDEX IDEX(
 
 EXMEM EXMEM(
     .clk_i       (clk_i),
+    .Miss_stall_i(Miss_stall),
     .RegWrite_i  (RegWrite_3),
     .MemtoReg_i  (MemtoReg_3),
     .MemRead_i   (MemRead_3),
@@ -119,6 +121,7 @@ EXMEM EXMEM(
 
 MEMWB MEMWB(
     .clk_i       (clk_i),
+    .Miss_stall_i(Miss_stall),
     .RegWrite_i  (RegWrite_4),
     .MemtoReg_i  (MemtoReg_4),
     .ALUResult_i (ALUResult_4),
@@ -147,6 +150,7 @@ PC PC(
     .clk_i       (clk_i),
     .rst_i       (rst_i),
     .start_i     (start_i),
+    .stall_i     (Miss_stall),
     .PCWrite_i   (PCWrite),
     .pc_i        (pc_0),
     .pc_o        (pc_1)

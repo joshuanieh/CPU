@@ -117,19 +117,32 @@ assign    mem_write_o  = mem_write;
 assign    write_hit    = hit & cpu_MemWrite_i;
 assign    cache_dirty  = write_hit;
 
+
 // TODO: add your code here!  (r_hit_data=...?)
 assign r_hit_data = sram_cache_data;
+
+integer i;
 // read data :  256-bit to 32-bit
 always@(cpu_offset or r_hit_data) begin
     // TODO: add your code here! (cpu_data=...?)
-    cpu_data <= r_hit_data[cpu_offset];
+    for (i = 0; i < 32; i = i + 1) begin
+        cpu_data[i] <= r_hit_data[cpu_offset * 8 + i];
+    end
 end
 
 
 // write data :  32-bit to 256-bit
 always@(cpu_offset or r_hit_data or cpu_data_i) begin
     // TODO: add your code here! (w_hit_data=...?)
-    w_hit_data <= r_hit_data;
+    for (i = 0; i < 32; i = i + 1) begin
+        w_hit_data[cpu_offset * 8 + i] <= cpu_data_i[i];
+    end
+    for (i = 0; i < cpu_offset * 8; i = i + 1) begin
+        w_hit_data[i] <= r_hit_data[i];
+    end
+    for (i = cpu_offset * 8 + 32; i < 256; i = i + 1) begin
+        w_hit_data[i] <= r_hit_data[i];
+    end
 end
 
 
@@ -147,6 +160,7 @@ always@(posedge clk_i or posedge rst_i) begin
             STATE_IDLE: begin
                 if(cpu_req && !hit) begin      // wait for request
                     state <= STATE_MISS;
+                    mem_enable <= 1'b1;
                 end
                 else begin
                     state <= STATE_IDLE;
@@ -162,7 +176,6 @@ always@(posedge clk_i or posedge rst_i) begin
                 else begin                    // write allocate: write miss = read miss + write hit; read miss = read miss + read hit
                     // TODO: add your code here! 
                     state <= STATE_READMISS;
-                    mem_enable <= 1'b1;
                 end
             end
             STATE_READMISS: begin
@@ -185,7 +198,6 @@ always@(posedge clk_i or posedge rst_i) begin
                 if(mem_ack_i) begin            // wait for data memory acknowledge
                     // TODO: add your code here! 
                     state <= STATE_READMISS;
-                    mem_enable <= 1'b1;
                     write_back <= 1'b0;
                     mem_write  <= 1'b0;
                 end

@@ -173,10 +173,19 @@ output reg [31:0] ALUResult_o, MemData_o;
 output reg [4:0]  RDaddr_o;
 
 always @(posedge clk_i) begin
-	RegWrite_o  <= (~ Miss_stall_i) & RegWrite_i;
-    MemtoReg_o  <= MemtoReg_i;
-	ALUResult_o <= ALUResult_i;
-	MemData_o   <= MemData_i;
-	RDaddr_o    <= RDaddr_i;
+	if (Miss_stall_i) begin
+		RegWrite_o  <= RegWrite_o;
+	    MemtoReg_o  <= MemtoReg_o;
+		ALUResult_o <= ALUResult_o;
+		MemData_o   <= MemData_o;
+		RDaddr_o    <= RDaddr_o;	
+	end
+	else begin
+		RegWrite_o  <= RegWrite_i;
+	    MemtoReg_o  <= MemtoReg_i;
+		ALUResult_o <= ALUResult_i;
+		MemData_o   <= MemData_i;
+		RDaddr_o    <= RDaddr_i;
+	end
 end
 endmodule

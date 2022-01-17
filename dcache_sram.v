@@ -27,7 +27,7 @@ output             hit_o;
 
 
 // Memory
-reg      [24:0]    tag [0:15][0:1];//use, dirty, tag   
+reg      [24:0]    tag [0:15][0:1];//valid, dirty, tag   
 reg      [255:0]   data[0:15][0:1];//2^5bytes * 8bits
 
 integer            i, j;
@@ -46,26 +46,32 @@ always@(posedge clk_i or posedge rst_i) begin
         end
     end
     if (enable_i && write_i) begin
-        // TODO: Handle your write of 2-way associative cache + LRU here
-        if(tag[addr_i][0][22:0] === tag_i[22:0]) begin
+        // TODO: Handle your write of 2-way associative cache + LRU here (0->recent)
+        //write hit
+        if((tag[addr_i][0][22:0] === tag_i[22:0]) & (tag[addr_i][0][24] === 1'b1)) begin
             data[addr_i][0] <= data_i;
-            tag[addr_i][0][23] <= 1'b1;
-            tag[addr_i][0][24] <= 1'b1;
-            tag[addr_i][1][24] <= 1'b0;
+            tag[addr_i][0] <= tag_i;
         end
-        else if(tag[addr_i][1][22:0] === tag_i[22:0]) begin
-            data[addr_i][1] <= data_i;
-            tag[addr_i][1][23] <= 1'b1;
-            tag[addr_i][0][24] <= 1'b0;
-            tag[addr_i][1][24] <= 1'b1;
+        else if((tag[addr_i][1][22:0] === tag_i[22:0]) & (tag[addr_i][1][24] === 1'b1)) begin
+            data[addr_i][1] <= data[addr_i][0]; //change position
+            tag[addr_i][1] <= tag[addr_i][0];   //change position
+            data[addr_i][0] <= data_i;          //write in new data
+            tag[addr_i][0] <= tag_i;            //change position
+        end
+        //read miss
+        else begin
+            data[addr_i][1] <= data[addr_i][0]; //change position
+            tag[addr_i][1] <= tag[addr_i][0];   //change position
+            data[addr_i][0] <= data_i;          //write in new data
+            tag[addr_i][0] <= tag_i;            //change tag
         end
     end
 end
 
 // Read Data      
 // TODO: tag_o=? data_o=? hit_o=?
-assign hit_o = (tag[addr_i][0][22:0] === tag_i[22:0]) | (tag[addr_i][1][22:0] === tag_i[22:0]);
-assign tag_o = hit_o ? ((tag[addr_i][0][22:0] === tag_i[22:0]) ? tag[addr_i][0] : tag[addr_i][1]) : (tag[addr_i][0][24] ? tag[addr_i][1] : tag[addr_i][0]);
-assign data_o = hit_o ? ((tag[addr_i][0][22:0] === tag_i[22:0]) ? data[addr_i][0] : data[addr_i][1]) : (tag[addr_i][0][24] ? data[addr_i][1] : data[addr_i][0]);
+assign hit_o = ((tag[addr_i][0][22:0] === tag_i[22:0]) & (tag[addr_i][0][24] === 1'b1)) | ((tag[addr_i][1][22:0] === tag_i[22:0]) & (tag[addr_i][1][24] === 1'b1));
+assign tag_o = (tag[addr_i][0][22:0] === tag_i[22:0]) ? tag[addr_i][0] : tag[addr_i][1]; //if both don't hit, treated the same as the 2nd is hit.
+assign data_o = (tag[addr_i][0][22:0] === tag_i[22:0]) ? data[addr_i][0] : data[addr_i][1];
 
 endmodule
